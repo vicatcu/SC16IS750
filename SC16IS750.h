@@ -1,8 +1,9 @@
-
 /*
   SC16IS750.h - Library for interfacing with SC16IS750 i2c to serial and gpio port expander with Arduino
   Created by Eric O'Neill, July 30, 2015
-  
+
+  Modified by Victor Aprea, July 13, 2020 to add support for Dual UART SC16IS752
+
 */
 
 #ifndef SC16IS750_H
@@ -33,7 +34,7 @@
 #define DLL        0x00 << 3
 #define DLM        0x01 << 3
 #define EFR        0x02 << 3
-#define XON1       0x04 << 3  
+#define XON1       0x04 << 3
 #define XON2       0x05 << 3
 #define XOFF1      0x06 << 3
 #define XOFF2      0x07 << 3
@@ -43,35 +44,35 @@
 #define SPI_READ_MODE_FLAG 0x80
 
 class SC16IS750 {
-public:
-
-	//i2c to uart functions
-	SC16IS750(int address);
-	//void begin();
+ public:
+    // i2c to uart functions
+    explicit SC16IS750(int address = 0x4D);
+    // void begin();
     byte available();
     byte txBufferSize();
     int read();
     void write(byte value);
     void write(const char *str);
 
-    //gpio expander functions
+    // gpio expander functions
     void configurePins(byte pinConfig);
     int writePin(int pin, bool val);
     int readPin(int pin);
-    //int readPin(int pin);
-    void configureUart();  
+    // int readPin(int pin);
+    void configureUart();
     bool uartConnected();
+    void setChannel(uint8_t channel);
 
-private:
-	byte _deviceAddress;
-	byte _outputRegVal;
-	byte _inputRegVal;
-	byte _pinConfig;
+ private:
+    byte _deviceAddress;
+    byte _outputRegVal;
+    byte _inputRegVal;
+    byte _pinConfig;
+    byte _channel;
 
-	void writeRegister(byte registerAddress, byte data);
+    void writeRegister(byte registerAddress, byte data);
     byte readRegister(byte registerAddress);
     void initUart();
-    
 };
 
-#endif
+#endif  // SC16IS750_H_
