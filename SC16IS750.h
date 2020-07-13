@@ -3,7 +3,7 @@
   Created by Eric O'Neill, July 30, 2015
 
   Modified by Victor Aprea, July 13, 2020 to add support for Dual UART SC16IS752
-
+  and to support baudrate calculation in place
 */
 
 #ifndef SC16IS750_H
@@ -32,7 +32,7 @@
 #define EFCR       0x0F << 3
 
 #define DLL        0x00 << 3
-#define DLM        0x01 << 3
+#define DLH        0x01 << 3
 #define EFR        0x02 << 3
 #define XON1       0x04 << 3
 #define XON2       0x05 << 3
@@ -59,9 +59,10 @@ class SC16IS750 {
     int writePin(int pin, bool val);
     int readPin(int pin);
     // int readPin(int pin);
-    void configureUart();
+    void configureUart(uint16_t baudRate = 9600);
     bool uartConnected();
     void setChannel(uint8_t channel);
+    void setCyrstalFrequencyMHz(float freqMHz);
 
  private:
     byte _deviceAddress;
@@ -69,6 +70,7 @@ class SC16IS750 {
     byte _inputRegVal;
     byte _pinConfig;
     byte _channel;
+    float _crystalFreqMHz;
 
     void writeRegister(byte registerAddress, byte data);
     byte readRegister(byte registerAddress);

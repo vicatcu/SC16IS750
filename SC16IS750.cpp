@@ -3,6 +3,7 @@
   Created by Eric O'Neill, July 30, 2015
 
   Modified by Victor Aprea, July 13, 2020 to add support for Dual UART SC16IS752
+  and to support baudrate calculation in place
 */
 
 #include "SC16IS750.h"
@@ -13,7 +14,8 @@ SC16IS750::SC16IS750(int address) {
   _outputRegVal = 0x00;
   _inputRegVal = 0x00;
   _deviceAddress = address;
-  _chanel = 0;
+  _channel = 0;
+  _crystalFreqMHz = 14.7456;  // default crystal
 }
 
 //-------------------- private functions ---------------------------
@@ -47,15 +49,22 @@ void SC16IS750::writeRegister(byte regAddress, byte data) {
   Wire.endTransmission();
 }
 
-void SC16IS750::configureUart() {
+void SC16IS750::configureUart(uint16_t baudRate) {
   writeRegister(LCR, 0x80);     // 0x80 to program baudrate
-  writeRegister(DLL, 0x5F);     // 0x73 = 9600 with Xtal = 12.288MHz
-  writeRegister(DLM, 0x00);
+
+  uint16_t brr = (uint16_t) round(_crystalFreqMHz / baudRate / 16.0);
+  uint8_t brrh = ((brr >> 8) & 0xff);
+  uint8_t brrl = (brr & 0xff);
+  writeRegister(DLL, brrl);     // 0x60 =   9600 baud for XTAL = 14.7456 MHz
+                                // 0x08 = 115200 baud for XTAL = 14.7456 MHz
+  writeRegister(DLH, brrh);
 
   writeRegister(LCR, 0xBF);     // access EFR register
+
   // writeRegister(EFR, 0xD0);  // enable enhanced registers
   writeRegister(EFR, 0x10);
   writeRegister(LCR, 0x03);     // 8 data bit, 1 stop bit, no parity
+
   // writeRegister(FCR, 0x06);  // reset TXFIFO, reset RXFIFO, non FIFO mode
   // writeRegister(FCR, 0x01);  // enable FIFO mode
   writeRegister(IER, 0x00);
@@ -83,7 +92,7 @@ void SC16IS750::configurePins(byte pinConfig) {
 }
 
 int SC16IS750::writePin(int pin, bool val) {
-  if ((_pinConfig >> pin & 0x01) == 0) {
+  if (((_pinConfig >> pin) & 0x01) == 0) {
     return -1;  // pin config is set to input
   }
   Wire.beginTransmission(_deviceAddress);
@@ -104,7 +113,7 @@ int SC16IS750::writePin(int pin, bool val) {
 }
 
 int SC16IS750::readPin(int pin) {
-  if (_pinConfig >> pin == 0) {
+  if ((_pinConfig >> pin) == 0) {
     return -1;  // pin configuration is set to output
   }
   Wire.beginTransmission(_deviceAddress);
@@ -161,4 +170,8 @@ void SC16IS750::setChannel(uint8_t channel) {
   if (channel < 2) {
   _channel = channel;
   }
+}
+
+void setCyrstalFrequencyMHz(float freqMHz) {
+  _crystalFreqMHz = freqMHz;
 }
