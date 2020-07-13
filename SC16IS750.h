@@ -59,10 +59,11 @@ class SC16IS750 {
     int writePin(int pin, bool val);
     int readPin(int pin);
     // int readPin(int pin);
+    // set crystal frequency before setting the baud rate
+    void setCyrstalFrequencyMHz(float freqMHz);
     void configureUart(uint16_t baudRate = 9600);
     bool uartConnected();
     void setChannel(uint8_t channel);
-    void setCyrstalFrequencyMHz(float freqMHz);
 
  private:
     byte _deviceAddress;
@@ -74,7 +75,6 @@ class SC16IS750 {
 
     void writeRegister(byte registerAddress, byte data);
     byte readRegister(byte registerAddress);
-    void initUart();
 };
 
 #endif  // SC16IS750_H_
