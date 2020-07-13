@@ -57,18 +57,19 @@ void SC16IS750::configureUart(uint16_t baudRate) {
   uint8_t brrl = (brr & 0xff);
   writeRegister(DLL, brrl);     // 0x60 =   9600 baud for XTAL = 14.7456 MHz
                                 // 0x08 = 115200 baud for XTAL = 14.7456 MHz
-  writeRegister(DLH, brrh);
+  writeRegister(DLH, brrh);     // 0x00 in most cases
 
   writeRegister(LCR, 0xBF);     // access EFR register
 
   // writeRegister(EFR, 0xD0);  // enable enhanced registers
-  writeRegister(EFR, 0x10);
+  writeRegister(EFR, 0x10);     // enables the enhanced fn IER[7:4], FCR[5:4],
+                                // and MCR[7:5] so that they can be modified.
   writeRegister(LCR, 0x03);     // 8 data bit, 1 stop bit, no parity
 
   // writeRegister(FCR, 0x06);  // reset TXFIFO, reset RXFIFO, non FIFO mode
   // writeRegister(FCR, 0x01);  // enable FIFO mode
-  writeRegister(IER, 0x00);
-  writeRegister(FCR, 0x07);
+  writeRegister(IER, 0x00);     // this configures Polled mode (see 7.5.2)
+  writeRegister(FCR, 0x07);     // reset TXFIFO, reset RXFIFO, FIFO enabled
   // writeRegister(EFCR, 0x00);
 }
 
