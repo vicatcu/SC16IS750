@@ -33,7 +33,7 @@ byte SC16IS750::readRegister(byte regAddress) {
   Wire.beginTransmission(_deviceAddress);
   Wire.write(regAddress);
   Wire.endTransmission();
-  Wire.requestFrom(_deviceAddress, 1);
+  Wire.requestFrom((uint8_t) _deviceAddress, (uint8_t) 1);
   if (Wire.available()) {
     return Wire.read();  // read values in the input register
   } else {
@@ -122,7 +122,7 @@ int SC16IS750::readPin(int pin) {
   Wire.write(IOSTATE);
   Wire.endTransmission();
 
-  Wire.requestFrom(_deviceAddress, 1);
+  Wire.requestFrom((uint8_t) _deviceAddress, (uint8_t) 1);
   if (Wire.available()) {
     _inputRegVal = Wire.read();  // read values in the input register
   }
