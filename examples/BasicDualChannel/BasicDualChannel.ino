@@ -1,4 +1,4 @@
-#include "SCI16IS750.h"
+#include "SC16IS750.h"
 
 // this sketch will print all incoming data from either serial port @ 9600 baud
 // it toggles sending data to channel 1 and channel 2 delimited by newlines
@@ -32,27 +32,27 @@ uint8_t txPort = 0;
 
 void loop() {
   i2cUart.setChannel(0);
-  if (i2cUart.availale()) {
+  if (i2cUart.available() > 0) {
     Serial.print("CH0: ");
-    while (i2cUart.available()) {
+    while (i2cUart.available() > 0) {
       Serial.write(i2cUart.read());
     }
     Serial.println();
   }
 
   i2cUart.setChannel(1);
-  if (i2cUart.availale()) {
+  if (i2cUart.available() > 0) {
     Serial.print("CH1: ");
-    while (i2cUart.available()) {
+    while (i2cUart.available() > 0) {
       Serial.write(i2cUart.read());
     }
     Serial.println();
   }
 
-  if (Serial.available()) {
-    while (Serial.available()) {
+  if (Serial.available() > 0) {
+    while (Serial.available() > 0) {
       byte ch = Serial.read();
-      if (ch === '\n') {
+      if (ch == '\n') {
         txPort = 1 - txPort;         // don't do this for single uart
         i2cUart.setChannel(txPort);
       }

@@ -75,6 +75,7 @@ class SC16IS750 {
 
     void writeRegister(byte registerAddress, byte data);
     byte readRegister(byte registerAddress);
+    byte patchChannel(byte subAddress);
 };
 
 #endif  // SC16IS750_H_

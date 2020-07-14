@@ -19,7 +19,7 @@ SC16IS750::SC16IS750(int address) {
 }
 
 //-------------------- private functions ---------------------------
-byte patchChannel(byte subAddress) {
+byte SC16IS750::patchChannel(byte subAddress) {
   subAddress &= 0b11111001;       // clear bits 2:1
                                   // then set bits 2:1 to _channel
   subAddress |= (_channel << 1);  // |= 0b00000000 or 0b00000010
@@ -174,6 +174,6 @@ void SC16IS750::setChannel(uint8_t channel) {
   }
 }
 
-void setCyrstalFrequencyMHz(float freqMHz) {
+void SC16IS750::setCyrstalFrequencyMHz(float freqMHz) {
   _crystalFreqMHz = freqMHz;
 }
