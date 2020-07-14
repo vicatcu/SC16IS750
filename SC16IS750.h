@@ -64,7 +64,7 @@ class SC16IS750 {
     void configureUart(uint32_t baudRate = 9600);
     bool uartConnected();
     void setChannel(uint8_t channel);
-
+    void setDeviceAddress(uint8_t address);
  private:
     byte _deviceAddress;
     byte _outputRegVal;

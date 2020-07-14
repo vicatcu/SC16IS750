@@ -177,3 +177,7 @@ void SC16IS750::setChannel(uint8_t channel) {
 void SC16IS750::setCyrstalFrequencyMHz(float freqMHz) {
   _crystalFreqMHz = freqMHz;
 }
+
+void SC16IS750::setDeviceAddress(uint8_t address) {
+  _deviceAddress = address;
+}
