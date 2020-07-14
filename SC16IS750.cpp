@@ -49,10 +49,11 @@ void SC16IS750::writeRegister(byte regAddress, byte data) {
   Wire.endTransmission();
 }
 
-void SC16IS750::configureUart(uint16_t baudRate) {
+void SC16IS750::configureUart(uint32_t baudRate) {
   writeRegister(LCR, 0x80);     // 0x80 to program baudrate
 
-  uint16_t brr = (uint16_t) round(_crystalFreqMHz / baudRate / 16.0);
+  uint16_t brr = (uint16_t) round((_crystalFreqMHz * 1e6) /
+    (baudRate * 16.0f));
   uint8_t brrh = ((brr >> 8) & 0xff);
   uint8_t brrl = (brr & 0xff);
   writeRegister(DLL, brrl);     // 0x60 =   9600 baud for XTAL = 14.7456 MHz
