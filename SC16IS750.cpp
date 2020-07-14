@@ -15,7 +15,7 @@ SC16IS750::SC16IS750(int address) {
   _inputRegVal = 0x00;
   _deviceAddress = address;
   _channel = 0;
-  _crystalFreqMHz = 14.7456;  // default crystal
+  _crystalFreqMHz = 14.7456f;  // default crystal
 }
 
 //-------------------- private functions ---------------------------
