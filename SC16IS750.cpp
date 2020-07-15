@@ -166,6 +166,12 @@ void SC16IS750::write(byte value) {
   writeRegister(THR, value);
 }
 
+void SC16IS750::write(const char * str) {
+  for (uint32_t ii = 0; ii < strlen(str); ii++) {
+    write(str[ii]);
+  }
+}
+
 // legal values are 0 and 1
 // and 1 is only valid if the target chip supports it (e.g. SC16IS752)
 void SC16IS750::setChannel(uint8_t channel) {
